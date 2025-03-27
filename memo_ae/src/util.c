@@ -209,7 +209,7 @@ int parse_arg(int argc, char*argv[], test_cfg_t* cfg) {
             case 'o':
                 num = atoi(optarg);
                 if(num < 0 || num > 5){
-                    fprintf(stderr, "operation must be 0(read), 1(read non-temporal), 2(write), 3(write non-temporal), 4(movdir64B) or 5(mix RW).\n");
+                    fprintf(stderr, "operation must be 0(read), 1(read non-temporal), 2(write), 3(write non-temporal), 4(movdir64B), 5(mix RW), 6(movdir64B devdax).\n");
                     return -1;
                 } else {
                     cfg->op = num;
