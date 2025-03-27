@@ -208,8 +208,8 @@ int parse_arg(int argc, char*argv[], test_cfg_t* cfg) {
 
             case 'o':
                 num = atoi(optarg);
-                if(num < 0 || num > 7){
-                    fprintf(stderr, "operation must be 0(read), 1(read non-temporal), 2(write), 3(write non-temporal), 4(movdir64B), 5(mix RW), 6(movdir64B devdax), 7(seq read non-temporal devdax)\n");
+                if(num < 0 || num > 8){
+                    fprintf(stderr, "operation must be 0(read), 1(read non-temporal), 2(write), 3(write non-temporal), 4(movdir64B), 5(mix RW), 6(movdir64B devdax), 7(seq read non-temporal devdax), 8(mix devdax RW)\n");
                     return -1;
                 } else {
                     cfg->op = num;

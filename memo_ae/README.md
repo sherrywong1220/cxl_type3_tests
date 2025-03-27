@@ -122,6 +122,9 @@ bash test_movdir_devdax_bw.sh
 #### Sequential NT access bandwidth for devdax (long long) > 15 min
 bash test_seq_bw_devdax_read_nt.sh
 
+#### Mixed NT RW bandwidth for devdax (long long) > 15 min
+bash test_mixed_bw_devax_nt.sh
+
 ## Results
 All results are under the `results` folder. 
 
