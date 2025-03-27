@@ -166,6 +166,9 @@ int run_test(test_cfg_t* cfg) {
     if (cfg->op == MOV) {
         clear_buff(cfg->buf_b, cfg->total_buf_size);
     }
+    if (cfg->op == MOV_DEVDAX) {
+        clear_buff(cfg->buf_b, cfg->total_buf_size);
+    }
 #endif
     
     // launch thread
@@ -181,6 +184,9 @@ int run_test(test_cfg_t* cfg) {
         if (cfg->op == MOV) {
             curr_cfg->start_addr_b = &(curr_cfg->buf_b[i * curr_cfg->per_thread_size]);
         }
+        if (cfg->op == MOV_DEVDAX) {
+            curr_cfg->start_addr_b = &(curr_cfg->buf_b[i * curr_cfg->per_thread_size]);
+        } 
         ret = pthread_create(&thread_arr[i], NULL, thread_wrapper, (void*)curr_cfg);
     }
 
@@ -550,6 +556,9 @@ void bw_wrapper(test_cfg_t* cfg) {
     if (cfg->op == MOV) {
         printf("src: 0x%lx, dst: 0x%lx\n", (uint64_t)src, (uint64_t)dst);
     }
+    if (cfg->op == MOV_DEVDAX) {
+        printf("src: 0x%lx, dst: 0x%lx\n", (uint64_t)src, (uint64_t)dst);
+    }
 
     /* sanity check */
     if (cfg->op == MIXED && rw_ratio == 2 && fixed_step != 384) {
@@ -595,6 +604,10 @@ void bw_wrapper(test_cfg_t* cfg) {
             case MOV:
                 op_movdir64B(src, dst, fixed_step);
                 break;
+            
+            case MOV_DEVDAX:
+                op_movdir64B(src, dst, fixed_step);
+                break;                
 
             case MIXED:
                 // op_mixed(src, fixed_step, rw_ratio);

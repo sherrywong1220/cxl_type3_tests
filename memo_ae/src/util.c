@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <sys/mman.h>
 
 #define MAX_NUM_THREAD 		128
 #define MAX_BUF_GB 			16
@@ -326,6 +327,39 @@ int get_node(void *p, uint64_t size)
     free(page_arr);
     free(status);
     return ret;
+}
+
+int init_buf_from_daxdev(uint64_t size, char** alloc_ptr) {
+    char *file = "/dev/dax1.0";
+    char *ptr;
+    int fd = open(file, O_RDWR);
+    if (fd < 0) {
+        fprintf(stderr,"Error opening %s\n", file);
+        return -1;
+    }
+    void *addr = mmap(0, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    if (addr == MAP_FAILED) {
+        fprintf(stderr,"Error mmap %s\n", file);
+        close(fd);
+        return -1;
+    } else {
+        fprintf(stderr, "Mapped to %p\n", addr);
+    }
+    ptr = (char *)addr;
+    memset(ptr, 0, size);
+    for (uint64_t i = 0; i < size; i += 64) {
+        asm volatile("clflush (%0)\n\t"
+                     :
+                     : "r" (ptr + i)
+                     : "memory");
+    }
+    asm volatile("mfence\n\t" ::: "memory");
+
+    printf("allocated: %luMB\n", (size >> 20));
+    *alloc_ptr = ptr;
+
+    close(fd);
+    return 0;
 }
 
 int init_buf(uint64_t size, int node, char** alloc_ptr) {
