@@ -116,6 +116,12 @@ bash test_seq_bw.sh
 bash test_rand_bw.sh
 ```
 
+#### `movdir64B` bandwidth for deveax (long long) > 15 min
+bash test_movdir_devdax_bw.sh
+
+#### Sequential NT access bandwidth for devdax (long long) > 15 min
+bash test_seq_bw_devdax_read_nt.sh
+
 ## Results
 All results are under the `results` folder. 
 

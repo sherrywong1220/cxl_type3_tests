@@ -44,7 +44,7 @@ int main(int argc, char*argv[]) {
             }
         }
     }
-    if (cfg->op == MOV_DEVDAX) {
+    if (cfg->op == MOV_DEVDAX || cfg->op == READ_NT_DEVDAX) {
         ret = init_buf_from_daxdev(cfg->total_buf_size, &(cfg->buf_b));
         if (ret < 0) {
             printf("BAD init_buf buf_b, fail to alloc\n");
